@@ -8,6 +8,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
+  final _formkey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -29,28 +30,65 @@ class _LoginState extends State<Login> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 30),
-              Text("Wellcome Back",
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  )),
-              SizedBox(height: 10),
-              Text(
-                "sign in to continue",
-                style: TextStyle(fontSize: 14, color: Colors.grey),
-              ),
-              SizedBox(height: 30),
-              TextFormField(
-                decoration: InputDecoration(
-                    hintText: "Email",
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10))),
-              )
-            ],
+          child: Form(
+            key: _formkey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 30),
+                Text("Wellcome Back",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    )),
+                SizedBox(height: 10),
+                Text(
+                  "sign in to continue",
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                SizedBox(height: 30),
+                TextFormField(
+                  controller: _emailController,
+                  validator: (val) =>
+                      val!.isNotEmpty ? null : "Please enter a email address",
+                  decoration: InputDecoration(
+                      hintText: "Email",
+                      prefixIcon: Icon(Icons.mail),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                ),
+                SizedBox(height: 30),
+                TextFormField(
+                  validator: (val) =>
+                      val!.length < 6 ? "Enter more than 6 char" : null,
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.vpn_key),
+                      hintText: "Password",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                ),
+                SizedBox(height: 30),
+                MaterialButton(
+                    onPressed: () {
+                      if (_formkey.currentState!.validate()) {
+                        print("Email: ${_emailController.text}");
+                        print("Password: ${_passwordController.text}");
+                      }
+                    },
+                    height: 70,
+                    minWidth: double.infinity,
+                    color: Theme.of(context).primaryColor,
+                    textColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text("Login",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)))
+              ],
+            ),
           ),
         ),
       ),
